@@ -1,20 +1,30 @@
-<?php 
+<?php
+//consider data included to functions.php so only one include statement
+include("inc/data.php");
+include("inc/functions.php");
+
 $pageTitle = "Personal Media Library";
 $section = null;
 
-include("inc/header.php") ?>
-        <div class="section catalog random">
+include("inc/header.php"); ?>
 
-			<div class="wrapper">
+<div class="section catalog random">
 
-				<h2>May we suggest something?</h2>
+  <div class="wrapper">
 
-								<ul class="items">
-					<li><a href="#"><img src="img/media/forest_gump.jpg" alt="Forrest Gump"><p>View Details</p></a></li><li><a href="#"><img src="img/media/princess_bride.jpg" alt="The Princess Bride"><p>View Details</p></a></li><li><a href="#"><img src="img/media/elvis_presley.jpg" alt="Elvis Forever"><p>View Details</p></a></li><li><a href="#"><img src="img/media/garth_brooks.jpg" alt="No Fences"><p>View Details</p></a></li>								
-				</ul>
+    <h2>May we suggest something?</h2>
 
-			</div>
+      <ul class="items">
+        <?php 
+          foreach ($catalog as $id => $item) {
+            //function is separate to use on other pages
+            echo get_item_html($id, $item);
+          }
+        ?>								
+      </ul>
 
-		</div>
+  </div>
 
-<?php include("inc/footer.php") ?>
+</div>
+
+<?php include("inc/footer.php");
