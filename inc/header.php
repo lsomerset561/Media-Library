@@ -2,7 +2,7 @@
 
 <head>
   <title>
-    <?php echo "Personal Media Library" ?>
+    <?php echo $pageTitle ?>
   </title>
   <link rel="stylesheet" href="css/style.css" type="text/css">
 </head>
