@@ -16,9 +16,13 @@ include("inc/header.php"); ?>
 
       <ul class="items">
         <?php 
-          foreach ($catalog as $id => $item) {
+          $random = array_rand($catalog, 4);
+          
+          //consider changing function parameters on index, catalog pages to $outerId & $innerItem to improve readability
+          foreach ($random as $id) {
+            
+            echo get_item_html($id, $catalog[$id]);
             //function is separate to use on other pages
-            echo get_item_html($id, $item);
           }
         ?>								
       </ul>

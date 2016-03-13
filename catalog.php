@@ -27,10 +27,13 @@ include("inc/header.php"); ?>
  <div class="wrapper" >   
    <h1><?php echo $pageTitle ?></h1>
    <ul class="items">
-    <?php 
+    <?php
+  
+      //consider changing function parameters on index, catalog pages to $outerId & $innerItem to improve readability
       foreach ($catalog as $id => $item) {
-        //function is separate to use on other pages
+        
         echo get_item_html($id, $item);
+        //function is separate to use on other pages
       }
     ?>
    </ul>
