@@ -29,10 +29,12 @@ include("inc/header.php"); ?>
    <ul class="items">
     <?php
   
+      $categories = array_category($catalog, $section);
+          
       //consider changing function parameters on index, catalog pages to $outerId & $innerItem to improve readability
-      foreach ($catalog as $id => $item) {
-        
-        echo get_item_html($id, $item);
+      foreach ($categories as $id) {
+
+        echo get_item_html($id, $catalog[$id]);
         //function is separate to use on other pages
       }
     ?>
