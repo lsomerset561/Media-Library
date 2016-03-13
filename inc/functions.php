@@ -14,14 +14,17 @@ function get_item_html($id, $item) {
 }
 
 function array_category($catalog, $category) {
-  if ($category === null) {
-    return array_keys($catalog);
-  }
   $output = array();
+  
   foreach ($catalog as $id => $item) {
-    if (strtolower($category) === strtolower($item["category"])) {
-      $output[] = $id;
+    if ($category === null || strtolower($category) === strtolower($item["category"])) {
+      $sort = $item["title"]; //assign title value in variable
+      $sort = ltrim($sort,"The ");
+      $sort = ltrim($sort,"A ");
+      $sort = ltrim($sort,"An ");
+      $output[$id] = $sort; //store title value to id key
     }
   }
-  return $output;
+  asort($output); //sorts according to title
+  return array_keys($output);
 }

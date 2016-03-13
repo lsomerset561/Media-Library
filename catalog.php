@@ -23,10 +23,17 @@ if (isset($_GET["cat"])) {
 include("inc/header.php"); ?>
 
 <div class="section catalog page">
- 
- <div class="wrapper" >   
-   <h1><?php echo $pageTitle ?></h1>
-   <ul class="items">
+
+  <div class="wrapper" >
+    <h1><?php 
+      if ($section != null) {
+        //link to full catalog if in a section & shows path
+        echo "<a href='catalog.php'>Full Catalog</a> &gt ";
+      }
+      echo $pageTitle; ?>
+    </h1>
+    
+    <ul class="items">
     <?php
   
       $categories = array_category($catalog, $section);
@@ -38,7 +45,7 @@ include("inc/header.php"); ?>
         //function is separate to use on other pages
       }
     ?>
-   </ul>
+    </ul>
  </div>
   
 </div>

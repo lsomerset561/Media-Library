@@ -2,7 +2,7 @@
 /*once familiar with OO PHP, make constructors for books, movies, and music. */
 $catalog = [];
 $catalog[101] = [
-	"title" => "A Design Patterns: Elements of Reusable Object-Oriented Software",
+	"title" => "Design Patterns: Elements of Reusable Object-Oriented Software",
 	"img" => "img/media/design_patterns.jpg",
     "genre" => "Tech",
     "format" => "Paperback",
