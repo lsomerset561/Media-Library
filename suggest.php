@@ -3,10 +3,15 @@
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $name = trim(filter_input(INPUT_POST, "name", FILTER_SANITIZE_STRING));
   $email = trim(filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL));
+  $category = trim(filter_input(INPUT_POST, "category", FILTER_SANITIZE_STRING));
+  $title = trim(filter_input(INPUT_POST, "title", FILTER_SANITIZE_STRING));
+  $format = trim(filter_input(INPUT_POST, "format", FILTER_SANITIZE_STRING));
+  $genre = trim(filter_input(INPUT_POST, "genre", FILTER_SANITIZE_STRING));
+  $year = trim(filter_input(INPUT_POST, "year", FILTER_SANITIZE_STRING));
   $details = trim(filter_input(INPUT_POST, "details", FILTER_SANITIZE_SPECIAL_CHARS));
   
-  if ($name == "" || $email == "" || $details == "") {
-    echo "Please fill in the required fields: Name, Email, and Details.";
+  if ($name == "" || $email == "" || $category == "" || $title == "") {
+    echo "Please fill in the required fields: Name, Email, Category and Title.";
     exit;
   }
   
@@ -27,9 +32,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   }
   
   $email_body = "";
-  $email_body .= "Name " . $name . "\n";
-  $email_body .= "Email " . $email . "\n";
-  $email_body .= "Details " . $details . "\n";
+  $email_body .= "Name: " . $name . "\n";
+  $email_body .= "Email: " . $email . "\n";
+  $email_body .= "SUGGESTED ITEM\n";
+  $email_body .= "Category: " . $category . "\n";
+  $email_body .= "Title: " . $title . "\n";
+  $email_body .= "Format: " . $format . "\n";
+  $email_body .= "Genre: " . $genre . "\n";
+  $email_body .= "Name: " . $year . "\n";
+  $email_body .= "Details: " . $details . "\n";
 
   $mail->isSMTP();// Set mailer to use SMTP
   
@@ -41,14 +52,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $mail->Debugoutput = 'html';
   $mail->Host = 'smtp.gmail.com';// Specify main and backup SMTP servers
   $mail->SMTPAuth = true;// Enable SMTP authentication
-  $mail->Username = 'user@example.com';// SMTP username
-  $mail->Password = 'secret';// SMTP password
+  $mail->Username = 'user@example.net';// SMTP username
+  $mail->Password = 'example1234';// SMTP password
   $mail->SMTPSecure = 'tls';// Enable TLS encryption, `ssl` also accepted
   $mail->Port = 587;
   
   //EDIT TO CHANGE DISPLAY OF FROM FIELD
   $mail->setFrom($email, $name);
-  $mail->addAddress('joe@example.net', 'Joe User');// Add recipient
+  $mail->addAddress('user@example.net', 'Joe User');// Add recipient
 
   $mail->isHTML(false);// Set email format to HTML
 
@@ -85,15 +96,15 @@ include("inc/header.php");
       <form method='post' action='suggest.php'>
         <table>
           <tr>
-            <th><label for='name'>Name</label></th>
+            <th><label for='name'>Name (required)</label></th>
             <td><input type='text' id='name' name='name' /></td>
-          </tr>
+          </tr> <!-- name -->
           <tr>
-            <th><label for='email'>Email</label></th>
+            <th><label for='email'>Email (required)</label></th>
             <td><input type='text' id='email' name='email' /></td>
-          </tr>
+          </tr> <!-- email -->
           <tr>
-            <th><label for='category'>Category</label></th>
+            <th><label for='category'>Category (required)</label></th>
             <td>
               <select id='category' name='category' />
                 <option value="">Select One</option>
@@ -102,11 +113,11 @@ include("inc/header.php");
                 <option value="Music">Music</option>
               </select>
             </td>
-          </tr>
+          </tr> <!-- category -->
           <tr>
-            <th><label for='title'>Title</label></th>
+            <th><label for='title'>Title (required)</label></th>
             <td><input type='text' id='title' name='title' /></td>
-          </tr>
+          </tr> <!-- title -->
            <tr>
             <th><label for='format'>Format</label></th>
             <td>
@@ -132,7 +143,7 @@ include("inc/header.php");
                 </optgroup>
               </select>
             </td>
-          </tr>
+          </tr> <!-- format -->
           <tr>
             <th><label for='genre'>Genre</label></th>
             <td>
@@ -204,15 +215,15 @@ include("inc/header.php");
                 </optgroup>
               </select>
             </td>
-          </tr>
+          </tr> <!-- genre -->
           <tr>
             <th><label for='year'>Year</label></th>
             <td><input type='text' id='year' name='year' /></td>
-          </tr>
+          </tr> <!-- year -->
           <tr>
             <th><label for='details'>Additional Details</label></th>
             <td><textarea name='details' id='details'></textarea></td>
-          </tr>
+          </tr> <!-- details -->
           <tr style="display:none">
             <th><label for='address'>Address</label></th>
             <td>
@@ -220,7 +231,7 @@ include("inc/header.php");
               <p>Please leave this field blank</p>
               <!-- <p> for screen readers & if CSS fails -->
             </td>
-          </tr>
+          </tr> <!-- hidden input -->
         </table>
 
         <input type='submit' value='Send' />
