@@ -11,14 +11,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $details = trim(filter_input(INPUT_POST, "details", FILTER_SANITIZE_SPECIAL_CHARS));
   
   if ($name == "" || $email == "" || $category == "" || $title == "") {
-    echo "Please fill in the required fields: Name, Email, Category and Title.";
-    exit;
+    $error_message = "Please fill in the required fields: Name, Email, Category and Title.";
   }
   
   //for spam robots referring to field below ("Spam Honeypot")
-  if ($_POST["address"] != "") {
-    echo "Bad form input";
-    exit;
+  if (!isset($error_message) && $_POST["address"] != "") {
+    $error_message = "Bad form input";
   }
 
   require("inc/phpmailer/class.phpmailer.php");
@@ -26,56 +24,57 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   
   $mail = new PHPMailer;
   
-  if (!$mail->ValidateAddress($email)) {
-    echo "Invalid Email Address";
-    exit;
+  if (!isset($error_message) && !$mail->ValidateAddress($email)) {
+    $error_message = "Invalid Email Address";
   }
   
-  $email_body = "";
-  $email_body .= "Name: " . $name . "\n";
-  $email_body .= "Email: " . $email . "\n";
-  $email_body .= "SUGGESTED ITEM\n";
-  $email_body .= "Category: " . $category . "\n";
-  $email_body .= "Title: " . $title . "\n";
-  $email_body .= "Format: " . $format . "\n";
-  $email_body .= "Genre: " . $genre . "\n";
-  $email_body .= "Name: " . $year . "\n";
-  $email_body .= "Details: " . $details . "\n";
-
-  $mail->isSMTP();// Set mailer to use SMTP
+  if (!isset($error_message)) {
   
-  //Enable SMTP debugging
-  // 0 = off (for production use)
-  // 1 = client messages
-  // 2 = client and server messages
-  $mail->SMTPDebug = 2;
-  $mail->Debugoutput = 'html';
-  $mail->Host = 'smtp.gmail.com';// Specify main and backup SMTP servers
-  $mail->SMTPAuth = true;// Enable SMTP authentication
-  $mail->Username = 'user@example.net';// SMTP username
-  $mail->Password = 'example1234';// SMTP password
-  $mail->SMTPSecure = 'tls';// Enable TLS encryption, `ssl` also accepted
-  $mail->Port = 587;
-  
-  //EDIT TO CHANGE DISPLAY OF FROM FIELD
-  $mail->setFrom($email, $name);
-  $mail->addAddress('user@example.net', 'Joe User');// Add recipient
+    $email_body = "";
+    $email_body .= "Name: " . $name . "\n";
+    $email_body .= "Email: " . $email . "\n";
+    $email_body .= "SUGGESTED ITEM\n";
+    $email_body .= "Category: " . $category . "\n";
+    $email_body .= "Title: " . $title . "\n";
+    $email_body .= "Format: " . $format . "\n";
+    $email_body .= "Genre: " . $genre . "\n";
+    $email_body .= "Name: " . $year . "\n";
+    $email_body .= "Details: " . $details . "\n";
 
-  $mail->isHTML(false);// Set email format to HTML
+    $mail->isSMTP();// Set mailer to use SMTP
 
-  //Some email clients group conversations by subject
-  $mail->Subject = 'Personal Media Library Suggestion ' . $name;
-    
-  $mail->Body = $email_body;
+    //Enable SMTP debugging
+    // 0 = off (for production use)
+    // 1 = client messages
+    // 2 = client and server messages
+    $mail->SMTPDebug = 2;
+    $mail->Debugoutput = 'html';
+    $mail->Host = 'smtp.gmail.com';// Specify main and backup SMTP servers
+    $mail->SMTPAuth = true;// Enable SMTP authentication
+    $mail->Username = 'user@example.net';// SMTP username
+    $mail->Password = 'example1234';// SMTP password
+    $mail->SMTPSecure = 'tls';// Enable TLS encryption, `ssl` also accepted
+    $mail->Port = 587;
 
-  if(!$mail->send()) {
-      echo 'Message could not be sent.';
-      echo 'Mailer Error: ' . $mail->ErrorInfo;
+    //EDIT TO CHANGE DISPLAY OF FROM FIELD
+    $mail->setFrom($email, $name);
+    $mail->addAddress('user@example.net', 'Joe User');// Add recipient
+
+    $mail->isHTML(false);// Set email format to HTML
+
+    //Some email clients group conversations by subject
+    $mail->Subject = 'Personal Media Library Suggestion ' . $name;
+
+    $mail->Body = $email_body;
+
+    if($mail->send()) {
+      header("location:suggest.php?status=thanks");
       exit;
-  } //No else -- Assumes it was sent successfully
+    }
+      $error_message = 'Message could not be sent.';
+      $error_message .= 'Mailer Error: ' . $mail->ErrorInfo;    
+  }
   
-  header("location:suggest.php?status=thanks");
-  exit;
 }
 
 $pageTitle = "Suggest a Media Item";
@@ -91,8 +90,13 @@ include("inc/header.php");
     <!-- change h1 to $pageTitle, change variable when form successfully submitted -->
     <?php if (isset($_GET["status"]) && $_GET["status"] === "thanks") {
       echo "<p>Thanks for the email! I&rsquo;ll check out your suggestion shortly!</p>";
-    } else { ?>
-      <p>If you think there is something I&rsquo;m missing, let me know!  Complete the form to send me an email.</p>
+    } else { 
+      if (isset($error_message)) {
+        echo "<p class='message'>" . $error_message . "</p>";
+      } else {
+        echo "<p>If you think there is something I&rsquo;m missing, let me know!  Complete the form to send me an email.</p>";
+      }
+    ?>
       <form method='post' action='suggest.php'>
         <table>
           <tr>
