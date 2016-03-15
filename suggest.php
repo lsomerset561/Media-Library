@@ -10,12 +10,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     exit;
   }
   
-  //for spam robots filling out form
+  //for spam robots referring to field below ("Spam Honeypot")
   if ($_POST["address"] != "") {
     echo "Bad form input";
     exit;
   }
 
+  require("inc/phpmailer/class.phpmailer.php");
+  
+  $mail = new PHPMailer;
+  
+  if (!$mail->ValidateAddress($email)) {
+    echo "Invalid Email Address";
+    exit;
+  }
+  
   echo "<pre>";
   $email_body = "";
   $email_body .= "Name " . $name . "\n";
