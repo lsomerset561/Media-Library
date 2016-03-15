@@ -17,6 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   }
 
   require("inc/phpmailer/class.phpmailer.php");
+  require("inc/phpmailer/class.smtp.php");
   
   $mail = new PHPMailer;
   
@@ -25,16 +26,43 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     exit;
   }
   
-  echo "<pre>";
   $email_body = "";
   $email_body .= "Name " . $name . "\n";
   $email_body .= "Email " . $email . "\n";
   $email_body .= "Details " . $details . "\n";
-  echo $email_body;
-  echo "</pre>";
 
-  //TO DO: Send email
+  $mail->isSMTP();// Set mailer to use SMTP
+  
+  //Enable SMTP debugging
+  // 0 = off (for production use)
+  // 1 = client messages
+  // 2 = client and server messages
+  $mail->SMTPDebug = 2;
+  $mail->Debugoutput = 'html';
+  $mail->Host = 'smtp.gmail.com';// Specify main and backup SMTP servers
+  $mail->SMTPAuth = true;// Enable SMTP authentication
+  $mail->Username = 'user@example.com';// SMTP username
+  $mail->Password = 'secret';// SMTP password
+  $mail->SMTPSecure = 'tls';// Enable TLS encryption, `ssl` also accepted
+  $mail->Port = 587;
+  
+  //EDIT TO CHANGE DISPLAY OF FROM FIELD
+  $mail->setFrom($email, $name);
+  $mail->addAddress('joe@example.net', 'Joe User');// Add recipient
 
+  $mail->isHTML(false);// Set email format to HTML
+
+  //Some email clients group conversations by subject
+  $mail->Subject = 'Personal Media Library Suggestion ' . $name;
+    
+  $mail->Body = $email_body;
+
+  if(!$mail->send()) {
+      echo 'Message could not be sent.';
+      echo 'Mailer Error: ' . $mail->ErrorInfo;
+      exit;
+  } //No else -- Assumes it was sent successfully
+  
   header("location:suggest.php?status=thanks");
   exit;
 }
