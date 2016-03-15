@@ -28,6 +28,7 @@ include("inc/header.php");
   
   <div class="wrapper">
     <h1>Suggest a Media Item</h1>
+    <!-- change h1 to $pageTitle, change variable when form successfully submitted -->
     <?php if (isset($_GET["status"]) && $_GET["status"] === "thanks") {
       echo "<p>Thanks for the email! I&rsquo;ll check out your suggestion shortly!</p>";
     } else { ?>
