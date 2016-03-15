@@ -1,0 +1,41 @@
+<!-- running example at http://jsfiddle.net/5SArB/2678/ -->
+
+<h1>Toggle fields based on form values</h1>
+<p>Change the age field and see what happens</p>
+<form method="POST">
+    <p>Name:
+        <input type="text" name="player_name" />
+    </p>
+    <p>Email:
+        <input type="text" name="player_email" />
+    </p>
+    <p>Age:
+        <select id="age" name="age">
+            <option value="13">13 or younger</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+        </select>
+    </p>
+    <div id="parentPermission">
+        <p>Parent's Name:
+            <input type="text" name="parent_name" />
+        </p>
+        <p>Parent's Email:
+            <input type="text" name="parent_email" />
+        </p>
+        <p>You must have parental permission before you can play.</p>
+    </div>
+    <p align="center">
+        <input type="submit" value="Join!" />
+    </p>
+</form>
